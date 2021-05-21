@@ -3,47 +3,67 @@ import sys
 def linesMatch (x, y):
     return x.count('\n') == y.count('\n')
 
-def cloze(target):
+def clozeDebug(x):
     result = []
     added = []
-    i = 1
-    for line in target:
-        if line in added:
-            if len(line) > 5:
-                index = added.index(line)
-                result.append('{{c' + str(index-1) + '::' + line + '}}' + '\n')
+    clozeCount = 1
+    index = 1
+    chars = " \n,.-;:_\t"
+    for line in x:
+        if len(line) > 5:
+            if line.strip(chars) in added:
+                index = added.index(line.strip(chars)) + 1
+                print(str(index))
             else:
-                result.append('\n')
+                index = clozeCount
+                clozeCount += 1
+                added.append(line.strip(chars))
+            result.append('{{c' + str(index) + '::' + line + '}}' + '\n')
         else:
-            if len(line) > 5: 
-                result.append('{{c' + str(i) + '::' + line + '}}' + '\n')
-                i += 1
-            else:
-                result.append('\n')
-        added.append(line)
-            
+            result.append('\n')
+    for line in added:
+        print(line)
     return result
-    
+
+def cloze(x):
+    result = []
+    added = []
+    clozeCount = 1
+    index = 1
+    chars = " \n,.-;:_\t"
+    for line in x:
+        if len(line) > 5:
+            if line.strip(chars) in added:
+                index = added.index(line.strip(chars)) + 1
+            else:
+                index = clozeCount
+                clozeCount += 1
+            result.append('{{c' + str(index) + '::' + line + '}}' + '\n')
+            added.append(line.strip(chars))
+        else:
+            result.append('\n')
+    return result
+
+
 
 def format(native, target):
     linesCount = native.count('\n')
-    print(linesCount)
     native = native.splitlines()
     target = target.splitlines()
-    target = cloze(target)
+    target = clozeDebug(target)
     result = ''
     for lineNum in range(linesCount):
         result += native[lineNum] + '  ' + target[lineNum]
     return result
 
-print ("Write the whole lyrics in your native tongue (cntl+D to stop): ")
+print ("\nWrite the whole lyrics in your native tongue (cntl+D to stop): \n")
 native = sys.stdin.read()
-print('Write the lyrics in your target language formated with clozes, you might want to do that step in anki (cntl+D to stop): ')
+print('\nWrite the lyrics in your target language formated with clozes, you might want to do that step in anki (cntl+D to stop): \n')
 target = sys.stdin.read()
 
 if (linesMatch(native,target)):
     result = format(native,target)
-    print('This is the formated result: ')
+    print('\nThis is the formated result: \n')
     print(result)
 else:
     print('The number of lines does not match')
