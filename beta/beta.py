@@ -66,4 +66,8 @@ if (linesMatch(native,target)):
     print('\nThis is the formated result: \n')
     print(result)
 else:
-    print('The number of lines does not match')
+    print('\nThe number of lines does not match\n')
+    if native.count('\n') > target.count('\n'):
+        print ('\nThe lyrics in your native tongue are longer\n')
+    else:
+        print ('\nThe lyrics in your target language are longer\n')
