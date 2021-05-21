@@ -38,8 +38,8 @@ def cloze(x):
             else:
                 index = clozeCount
                 clozeCount += 1
+                added.append(line.strip(chars))
             result.append('{{c' + str(index) + '::' + line + '}}' + '\n')
-            added.append(line.strip(chars))
         else:
             result.append('\n')
     return result
@@ -50,7 +50,7 @@ def format(native, target):
     linesCount = native.count('\n')
     native = native.splitlines()
     target = target.splitlines()
-    target = clozeDebug(target)
+    target = cloze(target)
     result = ''
     for lineNum in range(linesCount):
         result += native[lineNum] + '  ' + target[lineNum]
