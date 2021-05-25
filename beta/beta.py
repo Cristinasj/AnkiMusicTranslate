@@ -3,6 +3,12 @@ import sys
 def linesMatch (x, y):
     return x.count('\n') == y.count('\n')
 
+def isComment(s):
+    return s[0] == '['
+
+def isLongEnough(x):
+    return len(x) > 3
+
 def clozeDebug(x):
     result = []
     added = []
@@ -10,7 +16,7 @@ def clozeDebug(x):
     index = 1
     chars = " \n,.-;:_\t"
     for line in x:
-        if len(line) > 5:
+        if isLongEnough(line):
             if line.strip(chars) in added:
                 index = added.index(line.strip(chars)) + 1
                 print(str(index))
@@ -21,8 +27,6 @@ def clozeDebug(x):
             result.append('{{c' + str(index) + '::' + line + '}}' + '\n')
         else:
             result.append('\n')
-    for line in added:
-        print(line)
     return result
 
 def cloze(x):
@@ -66,8 +70,8 @@ if (linesMatch(native,target)):
     print('\nThis is the formated result: \n')
     print(result)
 else:
-    print('\nThe number of lines does not match\n')
+    print('\n [ERROR] The number of lines does not match\n')
     if native.count('\n') > target.count('\n'):
-        print ('\nThe lyrics in your native tongue are longer\n')
+        print ('\n [ERROR] The lyrics in your native tongue are longer\n')
     else:
-        print ('\nThe lyrics in your target language are longer\n')
+        print ('\n [ERROR] The lyrics in your target language are longer\n')
