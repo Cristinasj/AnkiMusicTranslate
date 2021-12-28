@@ -29,14 +29,16 @@ def clozeDebug(x):
             result.append('\n')
     return result
 
-def cloze(x):
+# Prior cloze function
+# It added every line equal or not
+def clozeRepeating(x):
     result = []
     added = []
     clozeCount = 1
     index = 1
     chars = " \n,.-;:_\t"
     for line in x:
-        if len(line) > 5:
+        if isLongEnough(line):
             if line.strip(chars) in added:
                 index = added.index(line.strip(chars)) + 1
             else:
@@ -46,6 +48,24 @@ def cloze(x):
             result.append('{{c' + str(index) + '::' + line + '}}' + '\n')
         else:
             result.append('\n')
+    return result
+
+def cloze(x): 
+    result = []
+    added = []
+    index = 1
+    chars = "\n,.-;:_\t"
+    for line in x:
+        # Does not maintain punctuation
+        line = line.strip(chars) 
+        # Does not add repeated lines 
+        if isLongEnough(line) and not line in added:
+            result.append('{{c' + str(index) + "::" + line + "}}" + "\n")
+            added.append(line)
+            index += 1
+        else: 
+            result.append("\n") 
+
     return result
 
 
@@ -60,10 +80,11 @@ def format(native, target):
         result += native[lineNum] + '  ' + target[lineNum]
     return result
 
+print('\nWrite the lyrics in your target language (cntl+D to stop): \n')
+target = sys.stdin.read()
+
 print ("\nWrite the whole lyrics in your native tongue (cntl+D to stop): \n")
 native = sys.stdin.read()
-print('\nWrite the lyrics in your target language formated with clozes, you might want to do that step in anki (cntl+D to stop): \n')
-target = sys.stdin.read()
 
 if (linesMatch(native,target)):
     result = format(native,target)
